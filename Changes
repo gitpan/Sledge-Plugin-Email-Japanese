@@ -1,0 +1,10 @@
+Revision history for Perl extension Sledge::Plugin::Email::Japanese
+
+0.03  Thu Mar 09 00:18:48 2006
+    - you can set the sendmail option.
+
+0.02  Sun Mar 05 23:44:06 2006
+    - request and session pass to template.
+
+0.01  Sun Mar  5 18:41:40 2006
+    - original version

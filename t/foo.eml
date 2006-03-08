@@ -1,0 +1,5 @@
+Hi, [% name %].
+
+I'm mailer!
+r=[% r %]
+session=[% session %]

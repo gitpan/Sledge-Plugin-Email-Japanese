@@ -1,0 +1,88 @@
+
+=encoding euc-jp
+
+=head1 名前
+
+Sledge::Plugin::Email::Japanese - Sledge でメールを送っちゃおうぜ計画
+
+=head1 概要
+
+    package Your::Pages;
+    use Sledge::Plugin::Email::Japanese;
+
+    sub dispatch_foo {
+        my $self = shift;
+        $self->send_mail(
+            'foo.eml' => {
+                Subject => 'Hi!',
+                To      => $self->r->param('email'),
+                TmplParams => {
+                    name => $self->r->param('name'),
+                },
+            },
+        );
+    }
+
+    package Your::Config::_common;
+    $C{EMAIL} = {
+        From => 'info@example.com',
+        send => ['sendmail', 'FromSender' => 'foo@example.com']
+    };
+
+=head1 説明
+
+Sledge の Pages クラスからメールを簡単に送るためのモジュールです。
+
+MIME::Lite::TT::Japanese を利用してメールを送ります。
+
+=head1 メソッド
+
+=head2 send_mail
+
+=over 4
+
+    $self->send_mail(
+        'foo.eml' => {
+            Subject => 'Hi!',
+            To      => $self->r->param('email'),
+            TmplParams => {
+                name => $self->r->param('name'),
+            },
+        },
+    );
+
+第1引数は、メールのテンプレートファイルです。$self->tmpl_dirname のディレクトリが対象となります。
+
+第2引数は、MIME::Lite::TT::Japanese に渡す引数となります。Subject が指定されていない場合、テンプレートの
+一行目が Subject として使われます。その際、Subject と本文の間には空白行が必要です。以下のような場合、
+Subject は「登録ありがとうございます」になり、それ以後の行が本文として扱われます。Subject は TT で
+処理されず、そのまま渡されることに注意してください。また、Subject は自動的に MIME Encode されます。
+
+    登録ありがとうございます 
+    
+    [% name %]様、会員登録ありがとうございました。
+    登録は下記のリンクをクリックした時点で完了となります。
+    http://example.com/
+
+第３引数に arrayref を渡すこともできます。その場合、MIME::Lite::TT::Japanese->send への引数として扱われます。
+sender をメールごとに変えたい場合などに使うとよいでしょう。
+
+=back
+
+=head1 だれがつくったの？
+
+MATSUNO Tokuhiro E<lt>tokuhiro at mobilefactory.jpE<gt>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=head1 ありがとうといいたいひとたち
+
+    id:precuredaisuki
+
+=head1 こっちもみてね
+
+L<Catalyst::Plugin::Email::Japanese>, L<MIME::Lite::TT::Japanese>
+
+=cut
+
