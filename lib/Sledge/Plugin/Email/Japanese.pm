@@ -1,7 +1,7 @@
 package Sledge::Plugin::Email::Japanese;
 use strict;
 use warnings;
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 use MIME::Lite::TT::Japanese;
 use File::Slurp;
 
@@ -19,22 +19,23 @@ sub import {
             $body = $2;
         }
 
-        my $conf = $self->create_config->email;
+        my $conf = $self->create_config;
         my $option = {
             LineWidth => 0,
             Template => \$body,
-            %$conf,
+            %{$conf->email},
             %$args,
         };
-        $option->{TmplParams}->{r} ||= $self->r;
+        $option->{TmplParams}->{r}       ||= $self->r;
         $option->{TmplParams}->{session} ||= $self->session;
+        $option->{TmplParams}->{config}  ||= $conf;
 
         my $msg = MIME::Lite::TT::Japanese->new(%$option);
         if ($self->debug_level) {
             $msg->print(\*STDERR);
             $self->session->param('last_mail' => $msg->as_string);
         }
-        $msg->send(@{$sendmail_opt || $conf->{send}});
+        $msg->send(@{$sendmail_opt || $conf->email->{send}});
     };
 }
 
@@ -83,6 +84,7 @@ it under the same terms as Perl itself.
 =head1 THANKS TO
 
     id:precuredaisuki
+    id:takefumi
 
 =head1 SEE ALSO
 

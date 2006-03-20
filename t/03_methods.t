@@ -11,11 +11,12 @@ sub email {
         send => ['sub', sub { $msg = shift->as_string }]
     };
 }
+sub device { 'W22H' }
 
 package Test::Pages;
 use Sledge::Plugin::Email::Japanese;
 use Data::Dumper;
-use Test::More tests => 14;
+use Test::More tests => 15;
 
 sub r { 'REQUEST' }
 sub session { 'SESSION' }
@@ -45,6 +46,7 @@ like $msg, qr/From: info\@example.com/, 'from';
 like $msg, qr/Hi, tokuhirom./, 'params';
 like $msg, qr/session=SESSION/, 'tmpl session';
 like $msg, qr/r=REQUEST/, 'tmpl request';
+like $msg, qr/config=W22H/, 'tmpl config';
 
 # -------------------------------------------------------------------------
 
